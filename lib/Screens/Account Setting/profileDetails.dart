@@ -36,11 +36,17 @@ class ProfileDetails extends StatelessWidget {
                   padding: const EdgeInsets.all(22.0),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.green,
-                        radius: 50,
-                        backgroundImage: AssetImage(
-                          'assets/profile_placeholder.png',
+                      GestureDetector(
+                        onTap: () {
+                          // Handle profile picture change
+                        },
+                        child: CircleAvatar(
+
+                          backgroundColor: Colors.green,
+                          radius: 50,
+                          backgroundImage: AssetImage(
+                            'assets/profile_placeholder.png',
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -55,6 +61,7 @@ class ProfileDetails extends StatelessWidget {
                         ),
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           labelText: 'Phone Number',
                         ),
@@ -63,6 +70,7 @@ class ProfileDetails extends StatelessWidget {
                         decoration: const InputDecoration(labelText: 'Gender'),
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.datetime,
                         decoration: const InputDecoration(
                           labelText: 'Date of Birth',
                         ),

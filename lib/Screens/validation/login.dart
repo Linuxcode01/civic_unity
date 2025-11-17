@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wastemanagement/Screens/register.dart';
+import 'package:wastemanagement/Screens/validation/register.dart';
 
-import 'package:wastemanagement/Screens/forgot.dart';
-import 'package:wastemanagement/Screens/OtpPage.dart';
+import 'package:wastemanagement/Screens/validation/forgot.dart';
+import 'package:wastemanagement/Screens/validation/OtpPage.dart';
 
 class login extends StatelessWidget{
  TextEditingController email = TextEditingController();

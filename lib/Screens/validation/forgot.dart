@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:wastemanagement/Screens/OtpPage.dart';
+import 'package:wastemanagement/Screens/validation/OtpPage.dart';
 
 
 class forgot extends StatelessWidget{

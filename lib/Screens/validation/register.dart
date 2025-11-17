@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:wastemanagement/Screens/OtpPage.dart';
-import 'package:wastemanagement/Screens/login.dart';
+import 'package:wastemanagement/Screens/validation/OtpPage.dart';
+import 'package:wastemanagement/Screens/validation/login.dart';
 import 'package:http/http.dart' as http;
 class register extends StatefulWidget{
   @override

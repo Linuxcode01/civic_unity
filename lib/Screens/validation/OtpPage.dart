@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wastemanagement/Screens/Home.dart';
+import 'package:wastemanagement/Screens/Homes/Home.dart';
 class OtpPage extends StatelessWidget{
   String email;
   OtpPage({required this.email});
