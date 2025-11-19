@@ -8,7 +8,7 @@ class UserServices{
   getData() async{
     List<User> allUsers = [];
     try{
-      var response = await http.get(Uri.parse(baseUrl + "user?page=2"));
+      var response = await http.get(Uri.parse("${baseUrl}user?page=2"));
       if(response.statusCode == 200){
         var rawData = response.body;
         var decodeData = jsonDecode(rawData);

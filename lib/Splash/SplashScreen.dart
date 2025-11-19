@@ -27,7 +27,7 @@ class _SplashscreenState extends State<Splashscreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 150,
                 height: 150,
                 child: Image(image: AssetImage("assets/images/login.jpeg")),

@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:wastemanagement/Screens/validation/login.dart';
-import 'package:wastemanagement/Screens/Homes/Home.dart';
-import 'package:wastemanagement/Screens/user.dart';
-import 'package:wastemanagement/Splash/SplashScreen.dart';
-import 'package:wastemanagement/Screens/profileScreen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'Screens/Account Setting/language_provider.dart';
-import 'package:wastemanagement/Screens/Account Setting/language_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +38,7 @@ class MyApp extends StatelessWidget {
                 fontFamily: "Regular"
             ),
 
-            home: ProfileScreen(),
+            home: loginScreen(),
           );
         },
       ),

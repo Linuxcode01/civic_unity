@@ -76,7 +76,7 @@ class Home extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width / 2 ,
                       height: 150,
                       child: Image(image: AssetImage("assets/images/register.jpeg"),width: 100, height: 100,),

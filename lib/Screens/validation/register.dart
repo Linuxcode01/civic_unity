@@ -3,9 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/validation/OtpPage.dart';
-import 'package:wastemanagement/Screens/validation/login.dart';
 import 'package:http/http.dart' as http;
 class register extends StatefulWidget{
+  const register({super.key});
+
   @override
   State<register> createState() => _registerState();
 }
@@ -26,37 +27,41 @@ class _registerState extends State<register> {
     super.dispose();
   }
 
-  Future<bool> sendData(String name, String email, String pass, String currPass) async {
-    final url = Uri.parse("https://10.0.2.2:8000/api/register");
+  Future<bool> sendData(String name, String email, String pass) async {
 
-    final body = jsonEncode({
-      "name": name,
-      "email": email,
-      "pass": pass,
-      "currPass": currPass
-    });
+      final url =  Uri.parse("https://10.0.2.2:8000/api/register");
+      final body = jsonEncode({
+        "name": name,
+        "email": email,
+        "pass": pass,
+      });
 
-    final headers = {
-      "Content-Type": "application/json",
-    };
+      final headers = {
+        "Content-Type": "application/json",
+      };
 
-    final response = await http.post(url);
+      final response = await http.post(url);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return true;
-    } else {
-      print("Server Error: ${response.body}");
-      return false;
-    }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        print("Server Error: ${response.body}");
+        return false;
+      }
+      
   }
 
   void RegisterUser() async{
-    final success = await sendData(name.text, email.text, pass.text, currentPass.text);
-    if(success){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register successfully")));
-    }
-    else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register Failed")));
+    try{
+      final success = await sendData(name.text, email.text, pass.text);
+      if(success){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register successfully")));
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register Failed")));
+      }
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 

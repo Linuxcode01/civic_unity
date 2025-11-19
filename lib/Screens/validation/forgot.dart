@@ -42,17 +42,17 @@ class forgot extends StatelessWidget{
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => OtpPage(email:email.text,)),);
                 },
-                child: Container(
+                child: SizedBox(
                   width: 150,
                   height: 60,
                   child: TextButton(onPressed: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => OtpPage(email: email.text)));
                   },
-                    child: Text("Send OTP", style: TextStyle(color: Colors.white, fontSize: 20),),
                     style: TextButton.styleFrom(
                     backgroundColor: Colors.green,
                 
-                  ),),
+                  ),
+                    child: Text("Send OTP", style: TextStyle(color: Colors.white, fontSize: 20),),),
                 ),
               )
             ]

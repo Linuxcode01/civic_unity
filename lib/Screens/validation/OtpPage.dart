@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/Homes/Home.dart';
 class OtpPage extends StatelessWidget{
   String email;
-  OtpPage({required this.email});
+  OtpPage({super.key, required this.email});
 
   TextEditingController text1 = TextEditingController();
 
@@ -34,13 +34,13 @@ class OtpPage extends StatelessWidget{
                     crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Enter the OTP sent to", style: TextStyle(fontSize: 24),),
-                        Text("${email}", style: TextStyle(fontSize: 24),)
+                        Text(email, style: TextStyle(fontSize: 24),)
                       ],
                     ),
                     SizedBox(height: 20,),
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(
@@ -54,7 +54,7 @@ class OtpPage extends StatelessWidget{
                           ),
                         ),
                         SizedBox( width: 5,),
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(
@@ -69,7 +69,7 @@ class OtpPage extends StatelessWidget{
                         ),
                         SizedBox( width: 5,),
 
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(
@@ -83,7 +83,7 @@ class OtpPage extends StatelessWidget{
                           ),
                         ),
                         SizedBox( width: 5,),
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(
@@ -97,7 +97,7 @@ class OtpPage extends StatelessWidget{
                           ),
                         ),
                         SizedBox( width: 5,),
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(
@@ -111,7 +111,7 @@ class OtpPage extends StatelessWidget{
                           ),
                         ),
                         SizedBox( width: 5,),
-                        Container(
+                        SizedBox(
                           height: 52,
                           width: MediaQuery.of(context).size.width * 0.13,
                           child: TextField(

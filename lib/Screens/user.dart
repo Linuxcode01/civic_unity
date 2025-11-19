@@ -36,7 +36,7 @@ class UserScreen extends StatelessWidget {
                     backgroundImage: NetworkImage(data[index].avatar!),
                   ),
                   title: Text("${data[index].name!}}"),
-                  subtitle: Text("${data[index].email!}"),
+                  subtitle: Text(data[index].email!),
                 );
               },
             );
