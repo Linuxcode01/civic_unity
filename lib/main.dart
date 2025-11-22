@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'Screens/Account Setting/language_provider.dart';
 import 'package:wastemanagement/Screens/validation/login.dart';
 
+import 'Screens/Homes/Home.dart';
+
 void main() {
   runApp(const MyApp());
 

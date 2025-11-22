@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/Usermodel.dart';
 
@@ -14,15 +15,7 @@ class UserServices {
           body: jsonEncode({'email': email, 'password': pass}),
           headers: {"Content-Type": "application/json"});
 
-
-      if (res.statusCode == 200) {
-        var rawdata = res.body;
-        var datas = jsonDecode(rawdata);
-        print("data : $datas");
-        return datas;
-      } else {
-        throw Exception("Error occurred with status code ${res.statusCode}");
-      }
+      return res;
     } catch (e) {
       print(e.toString());
     }
@@ -36,13 +29,29 @@ class UserServices {
 
       var rawdata = res.body;
       var data = jsonDecode(rawdata);
+      return data;
+    } catch (e) {
+      print(e.toString());
+      throw Exception(e.toString());
+    }
+  }
 
-      if (data.statusCode == 200 || res.statusCode == 201) {
-        print("User created successfully");
+  forgetPassword(String email, BuildContext context) async {
+    try {
+      var res = await http.post(
+          Uri.parse('${baseUrl}api/v1/user/forgot-password'),
+          body: jsonEncode({'email': email}),
+          headers: {"Content-Type": "application/json"});
+
+      var rawdata = res.body;
+      var data = jsonDecode(rawdata);
+
+      if (res.statusCode == 200) {
         return data;
       } else {
-        throw Exception(
-            "Registration Failed: ${data['message']}");
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(" User not found")));
+        return;
       }
     } catch (e) {
       print(e.toString());
@@ -50,27 +59,20 @@ class UserServices {
     }
   }
 
-
-
-  verifyOtp(String email, String otp) {
+  verifyOtp(String email, String otp, BuildContext context) async {
     // Dummy implementation for OTP verification
-    try {
-      if (otp == "123456") {
-        return {
-          'status': 'success',
-          'data': {
-            'id': 1,
-            'name': 'John Doe',
-            'email': email,
-            'phone': '123-456-7890',
-            'photo': 'https://example.com/photo.jpg'
-          }
-        };
-      } else {
-        return {'status': 'failure'};
-      }
-    } catch (e) {
-      throw Exception(e.toString());
+    var res = await http.post(
+        Uri.parse('${baseUrl}api/v1/user/verify-otp/:$email'),
+        body: jsonEncode({'otp': otp}),
+        headers: {"Content-Type": "application/json"});
+
+    var rawData = res.body;
+    var data = jsonDecode(rawData);
+    if (res.statusCode == 200) {
+      return data;
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Invalid OTP")));
     }
   }
 

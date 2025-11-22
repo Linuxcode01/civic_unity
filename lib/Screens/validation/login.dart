@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/Homes/Home.dart';
 import 'package:wastemanagement/Screens/validation/register.dart';
@@ -27,18 +29,42 @@ class LoginScreen extends StatelessWidget {
         }
         var res =
             await UserServices().getData(_email.text.trim(), _pass.text.trim());
-        print(res);
-        if (res['success'] == true) {
+
+        var rawdata = res.body;
+        var datas = jsonDecode(rawdata);
+        print(datas);
+
+        if (datas['success'] == true) {
+
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => HomePageContent(
-                        apiData: res,
-                      )));
+                    apiData: res,
+                  )));
+
+          print("data : $datas");
+          return datas;
+        } else if(res.statusCode == 400) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Error : ${res.statusCode}")));
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("Invalid Credentials")));
+
         }
+
+        // if (res['success'] == true) {
+        //   Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (context) => HomePageContent(
+        //                 apiData: res,
+        //               )));
+        // } else {
+        //   ScaffoldMessenger.of(context)
+        //       .showSnackBar(SnackBar(content: Text("Invalid Credentials")));
+        // }
       } catch (e) {
         throw Exception(e.toString());
       }

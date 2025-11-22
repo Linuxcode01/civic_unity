@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/validation/OtpPage.dart';
 
+import '../../Services/User_services.dart';
+
 class Forgot extends StatelessWidget {
   const Forgot({super.key});
 
@@ -11,6 +13,29 @@ class Forgot extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final height = size.height;
     final width = size.width;
+
+    Future<void> forgotPassword(String email, BuildContext context) async {
+      // Here you would typically call your backend service to send the OTP
+      // For demonstration, we'll just navigate to the OTP page
+
+      var data = UserServices().forgetPassword(email.trim(), context);
+      print(data);
+      if(data['success'] != true){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Error : ${data['message']}")));
+        return;
+      }else{
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("OTP sent to $email")));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpPage(email: email),
+          ),
+        );
+      }
+
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -52,12 +77,7 @@ class Forgot extends StatelessWidget {
                   height: height * 0.07,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OtpPage(email: email.text),
-                        ),
-                      );
+                      forgotPassword(email.text, context);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.green,

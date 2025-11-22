@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/Homes/Home.dart';
+import 'package:wastemanagement/Screens/validation/login.dart';
 import '../../Services/User_services.dart';
 import '../../models/Usermodel.dart';
 
@@ -26,6 +27,8 @@ class _OtpPageState extends State<OtpPage> {
   Future<void> verify() async {
     final otp = controllers.map((e) => e.text).join();
 
+    print ("OTP entered: $otp");
+
     if (otp.length != 6) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Enter full OTP")));
@@ -33,20 +36,14 @@ class _OtpPageState extends State<OtpPage> {
     }
 
     try {
-      final res = await UserServices().verifyOtp(widget.email, otp);
+      final res = await UserServices().verifyOtp(widget.email.trim(), otp, context);
 
-      if (res['status'] == 'success') {
-        final user = User(
-          name: res['data']['name'],
-          email: res['data']['email'],
-          password: res['data']['password'],
-          referredBy: res['data']['referredBy'],
+      if(res['success'] == true) {
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
         );
-
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (_) => Home(user: user)),
-        // );
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Invalid OTP")));

@@ -3,6 +3,7 @@ import 'package:wastemanagement/models/Usermodel.dart';
 import 'package:wastemanagement/Screens/validation/login.dart';
 import '../../Services/User_services.dart';
 import '../Homes/HomePageContent.dart';
+import '../Homes/Home.dart';
 
 class register extends StatefulWidget {
   const register({super.key});
@@ -70,7 +71,7 @@ class _registerState extends State<register> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
+          .showSnackBar(SnackBar(content: Text("$e.toString()")));
     }
   }
 
