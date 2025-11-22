@@ -1,10 +1,10 @@
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:wastemanagement/Screens/validation/OtpPage.dart';
-import 'package:http/http.dart' as http;
-class register extends StatefulWidget{
+import 'package:wastemanagement/models/Usermodel.dart';
+import 'package:wastemanagement/Screens/validation/login.dart';
+import '../../Services/User_services.dart';
+import '../Homes/HomePageContent.dart';
+
+class register extends StatefulWidget {
   const register({super.key});
 
   @override
@@ -12,165 +12,194 @@ class register extends StatefulWidget{
 }
 
 class _registerState extends State<register> {
-
-  TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
-  TextEditingController currentPass = TextEditingController();
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+  final TextEditingController _referral = TextEditingController();
 
   @override
   void dispose() {
-    name.dispose();
-    email.dispose();
-    pass.dispose();
-    currentPass.dispose();
+    _name.dispose();
+    _email.dispose();
+    _pass.dispose();
+    _confirmPass.dispose();
+    _referral.dispose();
     super.dispose();
   }
 
-  Future<bool> sendData(String name, String email, String pass) async {
+  Future<void> signUp() async {
+    if (_name.text.isEmpty ||
+        _email.text.isEmpty ||
+        _pass.text.isEmpty ||
+        _confirmPass.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("All fields are required")));
+      return;
+    }
 
-      final url =  Uri.parse("https://10.0.2.2:8000/api/register");
-      final body = jsonEncode({
-        "name": name,
-        "email": email,
-        "pass": pass,
-      });
+    if (_pass.text.trim() != _confirmPass.text.trim()) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Passwords do not match")));
+      return;
+    }
 
-      final headers = {
-        "Content-Type": "application/json",
-      };
+    final user = User(
+      name: _name.text.trim(),
+      email: _email.text.trim(),
+      password: _pass.text.trim(),
+      referredBy: _referral.text.trim(),
+    );
 
-      final response = await http.post(url);
+    try {
+      var data = await UserServices().createUser(user);
+      print(data);
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
-      } else {
-        print("Server Error: ${response.body}");
-        return false;
+      if (data['success'] == true) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("User Registered!")));
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => HomePageContent(apiData: data)),
+        );
       }
-      
-  }
-
-  void RegisterUser() async{
-    try{
-      final success = await sendData(name.text, email.text, pass.text);
-      if(success){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register successfully")));
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Registration Failed: ${data['message']}")));
       }
-      else{
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" Register Failed")));
-      }
-    }catch(e){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: $e")));
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-   return Container(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.25,
+            left: 18,
+            right: 18,
+          ),
+          child: Column(
+            children: [
+              const Text(
+                "Register",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
 
-     child: Scaffold(
-       body: SingleChildScrollView(
-         child: Container(
-           padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.3,left: 10, right: 10 ),
-           child: Column(
-             children: [
-               Text(
-                 "Register ",
-                 style: TextStyle(
-                   fontWeight:FontWeight.bold,
-                   fontSize: 24,
-                 ),
-               ),
-         
-                      Container(
-                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01,left: 20,right: 20),
-                     child: Column(
-                       children: [
-                         TextField(
-                           controller:name,
-                           decoration: InputDecoration(
-                             hintText: "Enter Name",
-                             border: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(10),
-                               borderSide: BorderSide( width: 1, style: BorderStyle.solid)
-                             )
-                           ),
-                         ),
-                         SizedBox(height: 10,),
-                         TextField(controller: email,
-                           decoration: InputDecoration(
-                               hintText: "Enter Email",
-                               border: OutlineInputBorder(
-                                   borderRadius: BorderRadius.circular(10),
-                                   borderSide: BorderSide( width: 1, style: BorderStyle.solid)
-                               )
-                           ),
-                         ),
-                         SizedBox(height: 10,),
-                         TextField(
-                           controller: pass,
-                           obscureText: true,
-                           obscuringCharacter: "*",
-                           decoration: InputDecoration(
-                               hintText: "Enter Password",
-                  
-                               border: OutlineInputBorder(
-                                   borderRadius: BorderRadius.circular(10),
-                                   borderSide: BorderSide( width: 1, style: BorderStyle.solid)
-                               )
-                           ),
-                         ),
-                         SizedBox(height: 10,),
-                         TextField(controller: currentPass,
-                           obscureText: true,
-                           obscuringCharacter: "*",
-                           decoration: InputDecoration(
-                               hintText: "Confirm Password",
-                               border: OutlineInputBorder(
-                                   borderRadius: BorderRadius.circular(10),
-                                   borderSide: BorderSide( width: 1, style: BorderStyle.solid)
-                               )
-                           ),
-                         ),
-                         SizedBox(height: 15,),
-                         ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(
-                           backgroundColor: Colors.green,
-                           fixedSize: Size(180, 70)
-                         ), child: Text("Submit", style: TextStyle(
-                           color: Colors.white,
-                           fontSize: 28,
-                         ),)),
-                  
-                         Padding(
-                           padding:  EdgeInsets.only(left: 90,top:100),
-                           child: Row(
-                             children: [
-                               Text("Already have an account."),
-                               GestureDetector(
-                                 onTap: (){
-                                   Navigator.push(context, MaterialPageRoute(builder: (context)=> OtpPage(email: email.text)));
-                                 },
-                                 child: Text("login", style: TextStyle(
-                                   color: Colors.blue,
-                                   fontSize: 20
-                                 ),),
-                               )
-                             ],
-                           ),
-                         )
-                       ],
-                     ),
-                   ),
-             ],
-           ),
-         ),
-       ),
-     ),
-   );
+              const SizedBox(height: 20),
+
+              // NAME
+              TextField(
+                controller: _name,
+                decoration: InputDecoration(
+                  hintText: "Enter Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // EMAIL
+              TextField(
+                controller: _email,
+                decoration: InputDecoration(
+                  hintText: "Enter Email",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // PASSWORD
+              TextField(
+                controller: _pass,
+                obscureText: true,
+                obscuringCharacter: "*",
+                decoration: InputDecoration(
+                  hintText: "Enter Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // CONFIRM PASSWORD
+              TextField(
+                controller: _confirmPass,
+                obscureText: true,
+                obscuringCharacter: "*",
+                decoration: InputDecoration(
+                  hintText: "Confirm Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // REFERRAL
+              TextField(
+                controller: _referral,
+                decoration: InputDecoration(
+                  hintText: "Referred By (optional)",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // SUBMIT BUTTON
+              ElevatedButton(
+                onPressed: signUp,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  fixedSize: const Size(180, 55),
+                ),
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white, fontSize: 22),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // LOGIN LINK
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account? "),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
+                      );
+                    },
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.blue, fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
-
 }
-

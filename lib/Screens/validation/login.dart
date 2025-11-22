@@ -1,161 +1,166 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:wastemanagement/Screens/Homes/Home.dart';
 import 'package:wastemanagement/Screens/validation/register.dart';
-import 'package:http/http.dart' as http;
-import 'package:wastemanagement/Screens/validation/forgot.dart';
-import 'package:wastemanagement/Screens/validation/OtpPage.dart';
+import 'package:wastemanagement/Services/User_services.dart';
+import '../Homes/HomePageContent.dart';
+import 'forgot.dart';
 
-class loginScreen extends StatelessWidget {
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
+class LoginScreen extends StatelessWidget {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _pass = TextEditingController();
 
-  loginScreen({super.key});
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Signup( {required TextEditingController email}) async {
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
+
+    signUp() async {
       try {
-        var response = await http.get(
-          Uri.parse("https://waste-management-y3tn.onrender.com/${email.text}"),
-        );
-        if (response.statusCode == 200) {
-          var data = response.body;
-          var decodedData = jsonDecode(data);
-          var password = decodedData['password'];
-          bool valid = password.equalTo(pass.text);
-          if (pass.text == password) {
-            Navigator.push(
+        if (_email.text.isEmpty || _pass.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("All fields are required")),
+          );
+          return;
+        }
+        var res =
+            await UserServices().getData(_email.text.trim(), _pass.text.trim());
+        print(res);
+        if (res['success'] == true) {
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => OtpPage(email: email.text),
-              ),
-            );
-          } else {
-            return ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Enter Valid Credential")));
-          }
+                  builder: (context) => HomePageContent(
+                        apiData: res,
+                      )));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Invalid Credentials")));
         }
       } catch (e) {
         throw Exception(e.toString());
       }
     }
 
-    // TODO: implement build
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage("assets/images/login.jpeg"),
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 16, top: 200),
-              child: Text(
-                "Welcome to Waste Management",
-                style: TextStyle(fontSize: 28, color: Colors.white),
+        backgroundColor: Colors.black.withOpacity(0.3),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Positioned(
+                left: width * 0.05,
+                top: height * 0.15,
+                child: SizedBox(
+                  width: width * 0.9,
+                  child: Text(
+                    "Welcome to Waste Management",
+                    style: TextStyle(
+                      fontSize: width * 0.07,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Form(
-                child: Container(
+
+              /// Scrollable form
+              SingleChildScrollView(
+                child: Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.4,
-                    right: 36,
-                    left: 36,
+                    top: height * 0.32,
+                    left: width * 0.08,
+                    right: width * 0.08,
                   ),
                   child: Column(
                     children: [
                       TextField(
-                        controller: email,
+                        controller: _email,
                         decoration: InputDecoration(
                           hintText: "Enter username",
                           filled: true,
-                          fillColor: Colors.grey.shade100,
+                          fillColor: Colors.white,
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(strokeAlign: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: height * 0.02),
                       TextField(
-                        controller: pass,
+                        controller: _pass,
                         obscureText: true,
                         obscuringCharacter: "*",
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey.shade100,
                           hintText: "Enter Password",
+                          filled: true,
+                          fillColor: Colors.white,
                           border: OutlineInputBorder(
-                            borderSide: BorderSide(strokeAlign: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: height * 0.04),
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Signup(email: email);
-                            },
+                          SizedBox(
+                            width: width * 0.4,
+                            height: height * 0.07,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: (){
+                                signUp();
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
-                                fixedSize: Size(150, 60),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                               child: Text(
                                 "Sign In",
                                 style: TextStyle(
-                                  fontSize: 30,
+                                  fontSize: width * 0.06,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 80),
+                          Spacer(),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => forgot(),
-                                ),
-                              );
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Forgot()));
                             },
                             child: Text(
                               "forgot password?",
                               style: TextStyle(
                                 color: Colors.red,
-                                fontSize: 18,
+                                fontSize: width * 0.045,
                                 decoration: TextDecoration.underline,
-                                decorationColor: Colors.red,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: height * 0.03),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
+                              Text("By continuing, you accept the "),
                               Text(
-                                "By continuing, You are accept the ",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              Text(
-                                "Therms of Services,",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                ),
+                                "Terms of Services,",
+                                style: TextStyle(color: Colors.green),
                               ),
                             ],
                           ),
@@ -163,57 +168,49 @@ class loginScreen extends StatelessWidget {
                             children: [
                               Text(
                                 "Privacy Policy ",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                ),
+                                style: TextStyle(color: Colors.green),
                               ),
-                              Text("and ", style: TextStyle(fontSize: 15)),
+                              Text("and "),
                               Text(
                                 "Content Policy.",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                ),
+                                style: TextStyle(color: Colors.green),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 15),
-                      Padding(
-                        padding: EdgeInsets.only(top: 50, left: 60),
-                        child: Row(
-                          children: [
-                            Text("Don't have any account? "),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => register(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "create account",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 18,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.blue,
+                      SizedBox(height: height * 0.04),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Don't have an account? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => register(),
                                 ),
+                              );
+                            },
+                            child: Text(
+                              "Create account",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: width * 0.05,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                      SizedBox(height: height * 0.04),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

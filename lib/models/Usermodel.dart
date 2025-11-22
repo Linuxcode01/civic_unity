@@ -1,19 +1,36 @@
-class User{
-  int? id;
+class User {
+
   String? name;
   String? email;
-  String? pass;
-  bool? driver;
-  String? avatar;
+  String? password;
+  String? referredBy;
 
-  User({this.id, this.name, this.email, this.pass, this.avatar, this.driver});
 
-  User.fromJson(Map<String, dynamic> json){
-    id = json['id'];
+  User(
+      {
+      required this.name,
+      required this.email,
+      required this.password,
+      required this.referredBy});
+
+
+  User.fromJson(Map<String, dynamic> json) {
+
     name = json['name'];
     email = json['email'];
-    pass = json['pass'];
-    driver = json['driver'];
-    avatar = json['avatar'];
+    password = json['password'];
+    referredBy = json['referredBy'];
   }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = {};
+
+    data['name'] = name;
+    data['email'] = email;
+    data['password'] = password;
+    data['referredBy'] = referredBy;
+    return data;
+  }
+
+
 }

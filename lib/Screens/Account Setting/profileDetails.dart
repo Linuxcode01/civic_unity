@@ -5,115 +5,143 @@ class ProfileDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+
+    // Same scaling logic used across your entire app
+    final scale = (w / 400).clamp(0.8, 1.25);
+
     return Scaffold(
-      appBar: AppBar(title: Center(child: const Text('Profile Details'))),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Profile Details',
+          style: TextStyle(
+            fontSize: 20 * scale,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+
       body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 18 * scale),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-                right: 20.0,
-                top: 80.0,
-              ),
-              child: Form(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        offset: const Offset(
-                          0,
-                          3,
-                        ), // changes position of shadow
-                      ),
-                    ],
-                  ),
+            SizedBox(height: 40 * scale),
 
-                  padding: const EdgeInsets.all(22.0),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Handle profile picture change
-                        },
-                        child: CircleAvatar(
-
-                          backgroundColor: Colors.green,
-                          radius: 50,
-                          backgroundImage: AssetImage(
-                            'assets/profile_placeholder.png',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
-                        ),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
-                        ),
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                        ),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(labelText: 'Gender'),
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        decoration: const InputDecoration(
-                          labelText: 'Date of Birth',
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: GestureDetector(
-                          child: Container(
-                            width: double.infinity,
-                            height: 50,
-                            color: Colors.green,
-                            child: Center(child: const Text('Save',style: TextStyle(color: Colors.white, fontSize: 20),)),
-                          ),
-                        ),
-                      ),
-                    ],
+            /// White card
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(20 * scale),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12 * scale),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10 * scale,
+                    offset: Offset(0, 4),
                   ),
-                ),
+                ],
               ),
-            ),
-            SizedBox(height: 40),
-            GestureDetector(
-              onTap: () {
-                // Handle account deletion
-              },
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(top
-                      : 40.0),
-                  child: Center(
-                    child: Text(
-                      "Delete Account",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // handle profile pic change
+                    },
+                    child: CircleAvatar(
+                      radius: 55 * scale,
+                      backgroundColor: Colors.green,
+                      backgroundImage: AssetImage(
+                        'assets/profile_placeholder.png',
                       ),
                     ),
                   ),
+
+                  SizedBox(height: 20 * scale),
+
+                  _buildInput("First Name", scale),
+                  _buildInput("Last Name", scale),
+                  _buildInput("Phone Number", scale, keyboard: TextInputType.phone),
+                  _buildInput("Gender", scale),
+                  _buildInput("Date of Birth", scale, keyboard: TextInputType.datetime),
+
+                  SizedBox(height: 25 * scale),
+
+                  /// SAVE BUTTON
+                  GestureDetector(
+                    onTap: () {
+                      // save action
+                    },
+                    child: Container(
+                      height: 50 * scale,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(8 * scale),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Save",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18 * scale,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 40 * scale),
+
+            GestureDetector(
+              onTap: () {
+                // delete action
+              },
+              child: Text(
+                "Delete Account",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20 * scale,
                 ),
               ),
             ),
+
+            SizedBox(height: 40 * scale),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// ---------- INPUT FIELD BUILDER ----------
+  Widget _buildInput(
+      String label,
+      double scale, {
+        TextInputType keyboard = TextInputType.text,
+      }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 15 * scale),
+      child: TextFormField(
+        keyboardType: keyboard,
+        style: TextStyle(fontSize: 16 * scale),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(fontSize: 16 * scale),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 12 * scale,
+            horizontal: 12 * scale,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8 * scale),
+          ),
         ),
       ),
     );

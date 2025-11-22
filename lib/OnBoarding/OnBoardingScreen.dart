@@ -11,8 +11,6 @@ class _OnboardingscreenState extends State<Onboardingscreen> {
   String selected = "";
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Colors.green,
       body: Padding(
@@ -30,43 +28,45 @@ class _OnboardingscreenState extends State<Onboardingscreen> {
                 ),
                 Text(
                   "civicunity",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Colors.white),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                      color: Colors.white),
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: Row(
                     children: [
-
                       Radio<String>(
                         value: "pickup",
-
                         groupValue: selected,
                         onChanged: (v) => setState(() => selected = v!),
                       ),
-                      Text("Pickup", style: TextStyle(fontSize: 20, color: Colors.white)),
-
+                      Text("Pickup",
+                          style: TextStyle(fontSize: 20, color: Colors.white)),
                       Radio<String>(
                         value: "earn",
                         groupValue: selected,
                         onChanged: (v) => setState(() => selected = v!),
                       ),
-                      Text("Earn",style: TextStyle(fontSize: 20, color: Colors.white))
+                      Text("Earn",
+                          style: TextStyle(fontSize: 20, color: Colors.white))
                     ],
                   ),
                 ),
                 SizedBox(width: double.infinity, height: 2),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: Container(
-                    height: 50,
-                    color: Colors.blueGrey,
-                    width: double.infinity,
-                    child: Center(
-                      child: Text("Get started", style: TextStyle(fontSize: 20, color: Colors.white )
-                                        ),
-                    ),
-                )
-                )
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: Container(
+                      height: 50,
+                      color: Colors.blueGrey,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text("Get started",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    ))
               ],
             ),
           ),

@@ -1,170 +1,141 @@
 import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/Homes/Home.dart';
-class OtpPage extends StatelessWidget{
-  String email;
-  OtpPage({super.key, required this.email});
+import '../../Services/User_services.dart';
+import '../../models/Usermodel.dart';
 
-  TextEditingController text1 = TextEditingController();
+class OtpPage extends StatefulWidget {
+  final String email;
+  const OtpPage({super.key, required this.email});
 
-  TextEditingController text2 = TextEditingController();
+  @override
+  State<OtpPage> createState() => _OtpPageState();
+}
 
-  TextEditingController text3 = TextEditingController();
+class _OtpPageState extends State<OtpPage> {
+  final List<TextEditingController> controllers =
+  List.generate(6, (_) => TextEditingController());
 
-  TextEditingController text4 = TextEditingController();
+  @override
+  void dispose() {
+    for (var c in controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
 
-  TextEditingController text5 = TextEditingController();
+  Future<void> verify() async {
+    final otp = controllers.map((e) => e.text).join();
 
-  TextEditingController text6 = TextEditingController();
+    if (otp.length != 6) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Enter full OTP")));
+      return;
+    }
+
+    try {
+      final res = await UserServices().verifyOtp(widget.email, otp);
+
+      if (res['status'] == 'success') {
+        final user = User(
+          name: res['data']['name'],
+          email: res['data']['email'],
+          password: res['data']['password'],
+          referredBy: res['data']['referredBy'],
+        );
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (_) => Home(user: user)),
+        // );
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Invalid OTP")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container(
-      child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25, left: 30,right: 30),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 3),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Enter the OTP sent to", style: TextStyle(fontSize: 24),),
-                        Text(email, style: TextStyle(fontSize: 24),)
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                              controller: text1,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)
-                                  )
-                              )
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.22,
+          left: 22,
+          right: 22,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Enter the OTP sent to",
+                style: TextStyle(fontSize: 22)),
+            Text(
+              widget.email,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            ),
 
-                          ),
-                        ),
-                        SizedBox( width: 5,),
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                            controller: text2,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15)
-                              )
-                            )
+            const SizedBox(height: 25),
 
-                          ),
-                        ),
-                        SizedBox( width: 5,),
-
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                              controller: text3,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)
-                                  )
-                              )
-
-                          ),
-                        ),
-                        SizedBox( width: 5,),
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                              controller: text4,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)
-                                  )
-                              )
-
-                          ),
-                        ),
-                        SizedBox( width: 5,),
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                              controller: text5,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)
-                                  )
-                              )
-
-                          ),
-                        ),
-                        SizedBox( width: 5,),
-                        SizedBox(
-                          height: 52,
-                          width: MediaQuery.of(context).size.width * 0.13,
-                          child: TextField(
-                              controller: text6,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15)
-                                  )
-                              )
-
-                          ),
-                        )
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30,),
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-                },
-                child: Container(
-                  // width: MediaQuery.of(context).size.width * 0.7,
-                  width: double.infinity,
+            // OTP Input Boxes
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                6,
+                    (index) => SizedBox(
+                  width: 48,
                   height: 55,
-                  color: Colors.green,
-                  child: Center(
-                    child: Text("Submit", style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white
-                    ),),
+                  child: TextField(
+                    controller: controllers[index],
+                    textAlign: TextAlign.center,
+                    maxLength: 1,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      counterText: "",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (value.isNotEmpty && index < 5) {
+                        FocusScope.of(context).nextFocus();
+                      }
+                    },
                   ),
                 ),
               ),
-              SizedBox(height: 9,),
-              Row(
-                children: [
-                  Text("Didn't get OTP?",style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18
-                  ),),
-                  Text(" Resend in 120 seconds",
-                  style: TextStyle(
-                    color: Colors.black26,
-                    fontSize: 18
-                  ),)
-                ],
-              )
-            ],
-          ),
+            ),
 
+            const SizedBox(height: 35),
+
+            // Submit Button
+            GestureDetector(
+              onTap: verify,
+              child: Container(
+                width: double.infinity,
+                height: 55,
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Center(
+                  child: Text("Submit",
+                      style: TextStyle(fontSize: 22, color: Colors.white)),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            Row(
+              children: const [
+                Text("Didn't get OTP?",
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
+                Text("  Resend in 120s",
+                    style: TextStyle(fontSize: 16, color: Colors.grey)),
+              ],
+            ),
+          ],
         ),
       ),
     );
