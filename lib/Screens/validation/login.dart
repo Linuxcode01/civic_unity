@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wastemanagement/Screens/Homes/Home.dart';
 import 'package:wastemanagement/Screens/validation/register.dart';
 import 'package:wastemanagement/Services/User_services.dart';
+import 'package:wastemanagement/utils/Constants.dart';
 import '../Homes/HomePageContent.dart';
 import 'forgot.dart';
 
@@ -28,23 +29,30 @@ class LoginScreen extends StatelessWidget {
           return;
         }
         var res =
-            await UserServices().getData(_email.text.trim(), _pass.text.trim());
+            await UserServices().getData(_email.text.trim(), _pass.text.trim(), context);
 
-        var rawdata = res.body;
-        var datas = jsonDecode(rawdata);
-        print(datas);
+        // var rawdata = res.body;
+        // var datas = jsonDecode(rawdata);
+        var data = res;
+        print(data);
 
-        if (datas['success'] == true) {
+        if (data['success'] == true) {
+          Map<String, dynamic> cleanData = {
+            "user": data["user"] ?? {},
+            "token": data["token"] ?? "",
+          };
+
+          Constants.prefs?.setBool("loggedIn", true);
 
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomePageContent(
-                    apiData: res,
+                  builder: (context) => Home(
+                    apiData: cleanData,
                   )));
 
-          print("data : $datas");
-          return datas;
+          print("login page : $data");
+          return data;
         } else if(res.statusCode == 400) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("Error : ${res.statusCode}")));

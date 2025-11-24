@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'CameraPage.dart';
 import 'HomePageContent.dart';
 import 'ProfilePage.dart';
@@ -6,6 +7,8 @@ import 'ProfilePage.dart';
 class Home extends StatefulWidget {
   final Map<String, dynamic> apiData;
   const Home({super.key, required this.apiData});
+
+
 
   @override
   State<Home> createState() => _HomeState();
@@ -17,6 +20,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
+
+
     final List<Widget> _pages = [
       HomePageContent(apiData: widget.apiData),
       CameraPage(),
@@ -24,10 +29,10 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Waste Management"),
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   title: Text("Waste Management"),
+      //   elevation: 0,
+      // ),
 
       body: _pages[_selectedIndex],
 

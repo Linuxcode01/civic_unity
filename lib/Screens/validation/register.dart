@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wastemanagement/Screens/validation/OtpPage.dart';
 import 'package:wastemanagement/models/Usermodel.dart';
 import 'package:wastemanagement/Screens/validation/login.dart';
 import '../../Services/User_services.dart';
@@ -56,13 +57,15 @@ class _registerState extends State<register> {
       var data = await UserServices().createUser(user);
       print(data);
 
+
+
       if (data['success'] == true) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("User Registered!")));
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => HomePageContent(apiData: data)),
+          MaterialPageRoute(builder: (context) => OtpPage(email: _email.text.trim())),
         );
       }
       else {

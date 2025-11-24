@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wastemanagement/utils/Constants.dart';
 import 'Screens/Account Setting/language_provider.dart';
 import 'package:wastemanagement/Screens/validation/login.dart';
 
 import 'Screens/Homes/Home.dart';
+import 'Screens/validation/OtpPage.dart';
 
-void main() {
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Constants.prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 
 }
@@ -40,7 +46,10 @@ class MyApp extends StatelessWidget {
                 fontFamily: "Regular"
             ),
 
-            home: LoginScreen(),
+            home: Constants.prefs!.getBool("loggedIn") == true
+                ? Home(apiData: {},)
+                : LoginScreen(),
+            // home: LoginScreen(),
           );
         },
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wastemanagement/Screens/validation/login.dart';
+import 'package:wastemanagement/utils/Constants.dart';
 
 import '../../utils/CustomContainer.dart';
 import '../Account Setting/language.dart';
@@ -40,7 +42,6 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
-
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth > 600;
@@ -51,11 +52,9 @@ class ProfilePage extends StatelessWidget {
                 horizontal: isWide ? constraints.maxWidth * 0.1 : 15 * scale,
                 vertical: 20 * scale,
               ),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // SHORTCUT ROW 1
                   SizedBox(
                     height: 110 * scale,
@@ -72,8 +71,7 @@ class ProfilePage extends StatelessWidget {
                         SizedBox(width: 10 * scale),
                         Expanded(
                           child: customContainer.container(
-                            icon: Icon(Icons.paypal_rounded,
-                                size: 28 * scale),
+                            icon: Icon(Icons.paypal_rounded, size: 28 * scale),
                             text: "Refer & Earn",
                             context: context,
                           ),
@@ -239,7 +237,13 @@ class ProfilePage extends StatelessWidget {
                     scale: scale,
                     iconColor: Colors.red,
                     textColor: Colors.red,
-                    onTap: () {},
+                    onTap: () {
+                      // Logout action
+                      Constants.prefs?.setBool("loggedIn", false);
+
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => LoginScreen()));
+                    },
                     context: context,
                   ),
                 ],

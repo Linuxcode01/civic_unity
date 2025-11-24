@@ -24,6 +24,7 @@ class _OtpPageState extends State<OtpPage> {
     super.dispose();
   }
 
+
   Future<void> verify() async {
     final otp = controllers.map((e) => e.text).join();
 
@@ -36,13 +37,20 @@ class _OtpPageState extends State<OtpPage> {
     }
 
     try {
-      final res = await UserServices().verifyOtp(widget.email.trim(), otp, context);
+       final data = await UserServices().verifyOtp(widget.email.trim(), otp, context);
 
-      if(res['success'] == true) {
+       print("Otp page $data");
+
+      if(data['success'] == true) {
+        Map<String, dynamic> cleanData = {
+          "user": data["user"] ?? {},
+          "request_status": data["request_status"] ?? "No active request",
+          "token": data["token"] ?? "",
+        };
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => LoginScreen()),
+          MaterialPageRoute(builder: (_) => Home(apiData: cleanData)),
         );
       } else {
         ScaffoldMessenger.of(context)
@@ -50,9 +58,9 @@ class _OtpPageState extends State<OtpPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
-    }
-  }
+         .showSnackBar(SnackBar(content: Text("Error: $e")));
+   }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +77,7 @@ class _OtpPageState extends State<OtpPage> {
             const Text("Enter the OTP sent to",
                 style: TextStyle(fontSize: 22)),
             Text(
-              widget.email,
+               widget.email,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
 
@@ -108,7 +116,7 @@ class _OtpPageState extends State<OtpPage> {
 
             // Submit Button
             GestureDetector(
-              onTap: verify,
+               onTap: verify,
               child: Container(
                 width: double.infinity,
                 height: 55,
@@ -125,11 +133,23 @@ class _OtpPageState extends State<OtpPage> {
             const SizedBox(height: 15),
 
             Row(
-              children: const [
-                Text("Didn't get OTP?",
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
-                Text("  Resend in 120s",
-                    style: TextStyle(fontSize: 16, color: Colors.grey)),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:  [
+                Container(
+                  child: Row(
+                    children: [
+                      Text("Didn't get OTP?",
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
+                      Text("  Resend in 120s",
+                          style: TextStyle(fontSize: 16, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Text("Resend", style: TextStyle(
+                      fontSize: 16, color: Colors.green
+                  ),),
+                )
               ],
             ),
           ],

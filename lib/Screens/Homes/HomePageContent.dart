@@ -11,16 +11,18 @@ class HomePageContent extends StatelessWidget {
     final height = size.height;
     final width = size.width;
 
-    String name = apiData['user']['name'] ?? "User";
-    String requestStatus = apiData['request_status'] ?? "No active request";
+    final user = apiData['user'] ?? {};
+    final String name = user['name'] ?? "User";
+    print(name);
+    final String requestStatus = apiData['request_status'] ?? "No active request";
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: Text("Home"),
-        centerTitle: true,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   title: Text("Home"),
+      //
+      //   elevation: 0,
+      // ),
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -34,7 +36,7 @@ class HomePageContent extends StatelessWidget {
 
               // Greeting Section
               Text(
-                "Hello, $name 👋",
+                "Hello, $name",
                 style: TextStyle(
                   fontSize: width * 0.07,
                   fontWeight: FontWeight.bold,

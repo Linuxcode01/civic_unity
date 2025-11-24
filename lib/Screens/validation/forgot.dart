@@ -15,14 +15,18 @@ class Forgot extends StatelessWidget {
     final width = size.width;
 
     Future<void> forgotPassword(String email, BuildContext context) async {
-      // Here you would typically call your backend service to send the OTP
-      // For demonstration, we'll just navigate to the OTP page
 
+
+      if(email.trim().isEmpty){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Please enter your email")));
+        return;
+      }
       var data = UserServices().forgetPassword(email.trim(), context);
       print(data);
       if(data['success'] != true){
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error : ${data['message']}")));
+            .showSnackBar(SnackBar(content: Text("${data['message']}")));
         return;
       }else{
         ScaffoldMessenger.of(context)
