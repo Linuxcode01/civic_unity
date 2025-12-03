@@ -1,13 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CameraPage.dart';
 import 'HomePageContent.dart';
 import 'ProfilePage.dart';
 
 class Home extends StatefulWidget {
-  final Map<String, dynamic> apiData;
-  const Home({super.key, required this.apiData});
-
+   Home({super.key});
 
 
   @override
@@ -17,15 +18,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+
   @override
   Widget build(BuildContext context) {
-
-
-
     final List<Widget> pages = [
-      HomePageContent(apiData: widget.apiData),
-      CameraPage(),
-      ProfilePage(apiData: widget.apiData),
+      HomePageContent(),
+      Container(),
+      ProfilePage(),
     ];
 
     return Scaffold(
@@ -33,12 +32,24 @@ class _HomeState extends State<Home> {
       //   title: Text("Waste Management"),
       //   elevation: 0,
       // ),
-
       body: pages[_selectedIndex],
 
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _selectedIndex,
+      //   onTap: (index) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //     });
+      //   },
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
+          if (index == 1) {
+            // Camera button clicked
+            CameraPage().show(context); // << THIS IS THE CORRECT PLACE
+            return; // Prevent switching screen
+          }
+
           setState(() {
             _selectedIndex = index;
           });

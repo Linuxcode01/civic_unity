@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waste_management_app/utils/Constants.dart';
+import 'Driver/Screens/Driver_dash_page.dart';
+import 'Driver/Screens/driver_home_page.dart';
 import 'Screens/Account Setting/language_provider.dart';
-import 'Screens/Homes/Home.dart';
-import 'Screens/validation/login.dart';
-import 'package:waste_management_app/Location/Location.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,10 +44,10 @@ class MyApp extends StatelessWidget {
                 fontFamily: "Regular"
             ),
 
-            home: Constants.prefs!.getBool("loggedIn") == true
-                ? Home(apiData: {},)
-                : LoginScreen(),
-            // home: LocationGetter(),
+            // home: Constants.prefs!.getBool("loggedIn") == true
+            //     ? Home()
+            //     : LoginScreen(),
+            home: driver_dash(),
           );
         },
       ),

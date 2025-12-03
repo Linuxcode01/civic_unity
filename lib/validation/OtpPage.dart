@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../Homes/Home.dart';
+import '../../utils/Constants.dart';
 import '../../Services/User_services.dart';
+import '../Screens/Homes/Home.dart';
 
 class OtpPage extends StatefulWidget {
   final String email;
@@ -35,20 +36,24 @@ class _OtpPageState extends State<OtpPage> {
     }
 
     try {
-       final data = await UserServices().verifyOtp(widget.email.trim(), otp, context);
+       var response = await UserServices().verifyOtp(widget.email.trim(), otp, context);
 
-       print("Otp page $data");
+       print("Otp page $response");
+
+       var data = response;
 
       if(data['success'] == true) {
-        Map<String, dynamic> cleanData = {
-          "user": data["user"] ?? {},
-          "request_status": data["request_status"] ?? "No active request",
-          "token": data["token"] ?? "",
-        };
+        // Map<String, dynamic> cleanData = {
+        //   "user": data["user"] ?? {},
+        //   "request_status": data["request_status"] ?? "No active request",
+        //   "token": data["token"] ?? "",
+        // };
+
+        Constants().saveUserData(response);
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => Home(apiData: cleanData)),
+          MaterialPageRoute(builder: (_) => Home()),
         );
       } else {
         ScaffoldMessenger.of(context)

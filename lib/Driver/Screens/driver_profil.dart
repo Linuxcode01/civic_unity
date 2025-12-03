@@ -6,25 +6,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Help&Support/feedback.dart';
 import '../../Help&Support/help_and_support.dart';
+import '../../Screens/Account Setting/language.dart';
+import '../../Screens/Account Setting/language_provider.dart';
 import '../../utils/Constants.dart';
 import '../../utils/CustomContainer.dart';
 import '../../validation/login.dart';
-import '../Account Setting/language.dart';
-import '../Account Setting/language_provider.dart';
-import '../Account Setting/notification.dart';
-import '../Account Setting/profileDetails.dart';
+import '../Accounts/Account Setting/driverNotification.dart';
+import '../Accounts/Account Setting/driverProfileDetails.dart';
 
 
-class ProfilePage extends StatefulWidget {
+class DriverProfile extends StatefulWidget {
   // final Map<String, dynamic> apiData;
 
-  ProfilePage({super.key});
+  const DriverProfile({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<DriverProfile> createState() => _DriverProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _DriverProfileState extends State<DriverProfile> {
   Future<Map<String, dynamic>?> getUserData() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -88,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: isWide ? constraints.maxWidth * 0.1 : 15 * scale,
-                vertical: 20 * scale,
+                vertical: 15 * scale,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   // SHORTCUT ROW 2
                   SizedBox(
-                    height: 110 * scale,
+                    height: 60 * scale,
                     child: Row(
                       children: [
                         Expanded(
@@ -164,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     scale: scale,
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => ProfileDetails()));
+                          MaterialPageRoute(builder: (_) => DriverProfileDetails()));
                     },
                     context: context,
                   ),
@@ -194,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     scale: scale,
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => notification()));
+                          MaterialPageRoute(builder: (_) => driverNotification()));
                     },
                     context: context,
                   ),

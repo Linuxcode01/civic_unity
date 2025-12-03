@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Location/Location.dart';
 
 class HomePageContent extends StatefulWidget {
-  final Map<String, dynamic> apiData;
+  // final Map<String, dynamic> apiData;
 
-  const HomePageContent({super.key, required this.apiData});
+  const HomePageContent({super.key});
 
   @override
   State<HomePageContent> createState() => _HomePageContentState();
@@ -13,11 +16,32 @@ class HomePageContent extends StatefulWidget {
 class _HomePageContentState extends State<HomePageContent> {
   String? userLocation;
 
+  Map<String, dynamic>? user;
+
+
+  Future<Map<String, dynamic>?> getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final data = prefs.getString("user_data");
+    if (data == null) return null;
+
+    return jsonDecode(data);
+  }
+
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    loadUser();
     fetchLocation();
   }
+
+  void loadUser() async {
+    user = await getUserData();
+    setState(() {});
+  }
+
 
   void fetchLocation() async {
     final locationService = Location();
@@ -36,12 +60,12 @@ class _HomePageContentState extends State<HomePageContent> {
     final height = size.height;
     final width = size.width;
 
-    final user = widget.apiData['user'] ?? {};
-    final String name = user['name'] ?? "User";
-    print(name);
-    final String requestStatus = widget.apiData['request_status'] ?? "No active request";
+    // final user = widget.user['user'] ?? {};
+    // final String name = user['name'] ?? "User";
+    // print("user from home page content $user");
+    // final String requestStatus = widget.apiData['request_status'] ?? "No active request";
 
-
+    print(user?["user"]["name"] ?? "No Name");
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -58,7 +82,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
               // Greeting Section
               Text(
-                userLocation!,
+                (userLocation == null) ? "Loading location..." : userLocation!,
                 style: TextStyle(
                   fontSize: width * 0.04,
                   color: Colors.black54,
@@ -89,7 +113,8 @@ class _HomePageContentState extends State<HomePageContent> {
                     ),
                     SizedBox(height: height * 0.01),
                     Text(
-                      requestStatus,
+                      // requestStatus,
+                      "No active request",
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: width * 0.04,

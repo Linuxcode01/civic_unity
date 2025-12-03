@@ -1,9 +1,13 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:waste_management_app/Screens/validation/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waste_management_app/validation/register.dart';
 import '../../Services/User_services.dart';
 import '../../utils/Constants.dart';
-import '../Homes/Home.dart';
+
+import '../Screens/Homes/Home.dart';
 import 'forgot.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -26,34 +30,34 @@ class LoginScreen extends StatelessWidget {
           );
           return;
         }
-        var res =
+        var response =
             await UserServices().getData(_email.text.trim(), _pass.text.trim(), context);
 
-        // var rawdata = res.body;
-        // var datas = jsonDecode(rawdata);
-        var data = res;
+        var data = response;
         print(data);
 
         if (data['success'] == true) {
-          Map<String, dynamic> cleanData = {
-            "user": data["user"] ?? {},
-            "token": data["token"] ?? "",
-          };
+          // Map<String, dynamic> cleanData = {
+          //   "user": data["user"] ?? {},
+          //   "token": data["token"] ?? "",
+          // };
+
+
+          Constants().saveUserData(response);
+
 
           Constants.prefs?.setBool("loggedIn", true);
 
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => Home(
-                    apiData: cleanData,
-                  )));
+                  builder: (context) => Home()));
 
           print("login page : $data");
           return data;
-        } else if(res.statusCode == 400) {
+        } else if(response.statusCode == 400) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Error : ${res.statusCode}")));
+              .showSnackBar(SnackBar(content: Text("Error : ${response.statusCode}")));
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text("Invalid Credentials")));
